@@ -1,15 +1,20 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SearchBehaviorController : MonoBehaviour
 {
-    [Header("Settings")] 
+    [Header("Settings")]
     [SerializeField] private float normalSpeed = 3f;
 
     private EnemyController enemyController;
 
+    [SerializeField] private UnityEvent targetReached;
+
     private void OnEnable()
     {
         enemyController = GetComponentInParent<EnemyController>();
+
+        MoveToNextWaypoint();
     }
 
     private void OnDisable()
@@ -39,6 +44,12 @@ public class SearchBehaviorController : MonoBehaviour
     }
 
     private void TargetReached()
+    {
+        targetReached.Invoke();
+        //enemyController.NavigatorController.MoveTo(enemyController.Waypoints[Random.Range(0, enemyController.Waypoints.Length)].position);
+    }
+
+    private void MoveToNextWaypoint()
     {
         enemyController.NavigatorController.MoveTo(enemyController.Waypoints[Random.Range(0, enemyController.Waypoints.Length)].position);
     }
