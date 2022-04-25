@@ -30,7 +30,7 @@ public class ChaseBehaviorController : MonoBehaviour
 
     private void CheckChase()
     {
-        enemyController.NavigatorController.MoveTo(enemyController.Player.position);
+        enemyController.NavigatorController.MoveTo(enemyController.Player.position, true);
         enemyController.NavigatorController.MeshAgent.speed = chaseSpeed;
     }
 }

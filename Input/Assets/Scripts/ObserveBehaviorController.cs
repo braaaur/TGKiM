@@ -19,7 +19,7 @@ public class ObserveBehaviorController : MonoBehaviour
     {
         enemyController = GetComponentInParent<EnemyController>();
 
-        enemyController.MeshRenderer.material.color = Color.blue;
+        //enemyController.MeshRenderer.material.color = Color.blue;
     }
 
     private void OnDisable()
@@ -68,12 +68,12 @@ public class ObserveBehaviorController : MonoBehaviour
             {
                 if (value)
                 {
-                    enemyController.MeshRenderer.material.color = Color.red;
+                    //enemyController.MeshRenderer.material.color = Color.red;
                     playerSpotted.Invoke();
                 }
                 else
                 {
-                    enemyController.MeshRenderer.material.color = Color.blue;
+                    //enemyController.MeshRenderer.material.color = Color.blue;
                     playerLost.Invoke();
                 }
             }

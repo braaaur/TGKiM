@@ -51,6 +51,6 @@ public class SearchBehaviorController : MonoBehaviour
 
     private void MoveToNextWaypoint()
     {
-        enemyController.NavigatorController.MoveTo(enemyController.Waypoints[Random.Range(0, enemyController.Waypoints.Length)].position);
+        enemyController.NavigatorController.MoveTo(enemyController.Waypoints[Random.Range(0, enemyController.Waypoints.Length)].position, false);
     }
 }

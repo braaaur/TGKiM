@@ -9,6 +9,15 @@ public class NavigatorController : MonoBehaviour
 
     [SerializeField] private bool isClickToGo;
 
+    [SerializeField] private Animator animator;
+    private Vector3 currentVelocity;
+    private Vector3 currentVelocityLocal;
+    private float speedRatio;
+
+    [SerializeField] private float animDirMuliplier = 0.2f;
+
+    [SerializeField] private float normalSpeed = 3f;
+    [SerializeField] private float doubleSpeed = 6f;
     /*
     private Camera mainCamera;
 
@@ -27,45 +36,59 @@ public class NavigatorController : MonoBehaviour
         }
         */
 
-        if (isClickToGo)
-        {
-            CheckClickToGo();
-        }
+        UpdateAnimations();
     }
 
-    public void MoveTo(Vector3 givenPosition)
+    private void UpdateAnimations()
+    {
+        if (animator == null)
+        {
+            return;
+        }
+
+        currentVelocity = meshAgent.velocity;
+        currentVelocityLocal = transform.InverseTransformVector(currentVelocity);
+
+        //
+
+        //animator.SetFloat("leftRight", currentVelocityLocal.x);
+        //animator.SetFloat("backwardForward", currentVelocityLocal.z);
+        animator.SetFloat("leftRight", currentVelocityLocal.x * animDirMuliplier);
+        animator.SetFloat("backwardForward", currentVelocityLocal.z * animDirMuliplier);
+
+        speedRatio = Mathf.Clamp01((currentVelocity.magnitude - normalSpeed) / (doubleSpeed - normalSpeed));
+
+        animator.SetFloat("speed", speedRatio);
+    }
+
+    public void MoveTo(Vector3 givenPosition, bool isDouble)
     {
         meshAgent.SetDestination(givenPosition);
-    }
 
-    private void CheckClickToGo()
-    {
-        if (Input.GetMouseButtonDown(0))
+        if (isDouble)
         {
-            //Ray mousePositionRay = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-            Ray mousePositionRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hitInfo;
-
-            if (Physics.Raycast(mousePositionRay, out hitInfo))
-            {
-                //Debug.Log("Hit! " + hitInfo.collider.gameObject.name);
-
-                MoveTo(hitInfo.point);
-            }
-            else
-            {
-                //Debug.Log("Hit nothing!");
-            }
+            meshAgent.speed = doubleSpeed;
+        }
+        else
+        {
+            meshAgent.speed = normalSpeed;
         }
     }
+   
 
     public NavMeshAgent MeshAgent
     {
         get
         {
             return meshAgent;
+        }
+    }
+
+    public Animator Animator
+    {
+        get
+        {
+            return animator;
         }
     }
 }

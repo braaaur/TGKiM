@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public LayerMask mask;
 
+    [SerializeField] private NavigatorController navigatorController;
 
     private Transform _tranfrom;
 
@@ -24,7 +25,12 @@ public class PlayerController : MonoBehaviour
     public UnityEvent room2Entered;
 
     private Vector3 position;
-    public float speed = 3f;
+    [SerializeField] private float speed = 3f;
+
+    [SerializeField] private float dobuleClickTimeWindow = 0.5f;
+    private float currentDobuleClickTime;
+
+    private bool isDead;
 
     private void OnEnable()
     {
@@ -36,7 +42,60 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         //Move();
-        MyCharacterUpdate();
+        //MyCharacterUpdate();
+
+        CheckClickToGo();
+        CheckReload();
+    }
+
+    private void CheckClickToGo()
+    {
+        if (isDead)
+        {
+            return;
+        }
+        
+        currentDobuleClickTime = Mathf.Clamp01(currentDobuleClickTime + Time.deltaTime);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (currentDobuleClickTime <= dobuleClickTimeWindow)
+            {
+                Click(true);
+            }
+            else
+            {
+                Click(false);
+            }
+            
+            currentDobuleClickTime = 0f;
+        }
+    }
+
+    private void Click(bool isDouble)
+    {
+        Ray mousePositionRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(mousePositionRay, out hitInfo))
+        {
+            //Debug.Log("Hit! " + hitInfo.collider.gameObject.name);
+
+            navigatorController.MoveTo(hitInfo.point, isDouble);
+        }
+        else
+        {
+            //Debug.Log("Hit nothing!");
+        }
+    }
+
+    private void CheckReload()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            navigatorController.Animator.SetTrigger("callReloading");
+        }
     }
 
     private void Move()
@@ -51,15 +110,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name == "Room1")
+        if (other.gameObject.tag == "Enemy")
         {
-            Debug.Log("Room1 entered");
-            room1Entered.Invoke();
-        }
-        else if (other.gameObject.name == "Room2")
-        {
-            Debug.Log("Room2 entered");
-            room2Entered.Invoke();
+
+            isDead = true;
+            navigatorController.Animator.SetBool("isDead", true);
         }
     }
 
@@ -75,14 +130,14 @@ public class PlayerController : MonoBehaviour
                 {
                     if (hitInfo.collider == sphereHits[i].collider)
                     {
-                        meshRenderer.material.color = Color.red;
+                        //meshRenderer.material.color = Color.red;
                         return;
                     }
                 }
             }
         }
 
-        meshRenderer.material.color = Color.green;
+        //meshRenderer.material.color = Color.green;
     }
 
     private void OnDrawGizmos()
