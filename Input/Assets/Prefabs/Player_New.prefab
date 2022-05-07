@@ -105,6 +105,9 @@ MonoBehaviour:
   currentMovementTime: 0.1
   animator: {fileID: 4890853165173709417}
   animDirMuliplier: 0.35
+  aimCamera: {fileID: 0}
+  aimCrosshair: {fileID: 0}
+  aimingRange: 15
 --- !u!1001 &4890853165166243019
 PrefabInstance:
   m_ObjectHideFlags: 0
