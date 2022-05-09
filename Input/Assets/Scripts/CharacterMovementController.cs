@@ -54,6 +54,11 @@ public class CharacterMovementController : MonoBehaviour
 
         povAim = aimCamera.GetCinemachineComponent<CinemachinePOV>();
 
+        if (povAim == null)
+        {
+            Debug.LogError("povAim == null !");
+        }
+        
         //Cursor.lockState = CursorLockMode.Locked;
     }
 
