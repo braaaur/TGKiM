@@ -20,7 +20,7 @@ public class LabController : MonoBehaviour
 
     private void UpdatePaths()
     {
-        Debug.Log(joint.connectedAnchor.ToString());
+        //Debug.Log(joint.connectedAnchor.ToString());
         
         joint.xMotion = ConfigurableJointMotion.Locked;
         joint.zMotion = ConfigurableJointMotion.Locked;
